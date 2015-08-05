@@ -1,4 +1,4 @@
-package com.akieus.trafigura.caching;
+package com.akieus.caching;
 
 public class PersonService implements IPersonService {
 

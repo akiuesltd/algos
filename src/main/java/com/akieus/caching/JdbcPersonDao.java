@@ -1,4 +1,4 @@
-package com.akieus.trafigura.caching;
+package com.akieus.caching;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

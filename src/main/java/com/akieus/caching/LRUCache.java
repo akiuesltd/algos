@@ -1,4 +1,4 @@
-package com.akieus.trafigura.caching;
+package com.akieus.caching;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
