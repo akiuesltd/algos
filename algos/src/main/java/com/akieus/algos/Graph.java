@@ -10,7 +10,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class Graph {
 
     public static void main(String[] args) {
-        printGraph(buildPersonWithFriends(), 3);
+//        printGraphDF(buildPersonWithFriends(), 3);
+        printGraphBF(buildPersonWithFriends(), 3);
     }
 
     private static void print(Collection<Person> collection) {
@@ -19,21 +20,54 @@ public class Graph {
         }
     }
 
-    private static void printGraph(Person root, int depth) {
+    private static void printGraphDF(Person root, int depth) {
         List<Person> visited = new LinkedList<>();
-        traverseGraph(root, depth, visited);
+        traverseDF(root, depth, visited);
         print(visited);
     }
 
-    private static void traverseGraph(Person person, int depth, List<Person> visited) {
+    private static void printGraphBF(Person person, int depth) {
+        print(traverseBF(person, depth));
+    }
+
+    private static void traverseDF(Person person, int depth, List<Person> visited) {
         if (depth == 0) {
             return;
         }
 
-        visited.add(person);
-        for (Person friend : person.getFriends()) {
-            traverseGraph(friend, depth - 1, visited);
+        if (!visited.contains(person)) {
+            visited.add(person);
         }
+
+        for (Person friend : person.getFriends()) {
+            traverseDF(friend, depth - 1, visited);
+        }
+    }
+
+    private static List<Person> traverseBF(Person person, int depth) {
+        List<Person> visited = new LinkedList<>();
+
+        LinkedList<Person> queue = new LinkedList<>();
+        queue.add(person);
+
+        while(true) {
+            if (queue.isEmpty()) {
+                break;
+            }
+
+            Person next = queue.removeFirst();
+            if (!visited.contains(next)) {
+                visited.add(next);
+            }
+            for (Person friend : next.getFriends()) {
+                if (!visited.contains(friend)) {
+                    queue.add(friend);
+                }
+            }
+        }
+
+
+        return visited;
     }
 
     public static Person buildPersonWithFriends() {
@@ -42,8 +76,8 @@ public class Graph {
         Person three = new Person(3);
 
         one.addFriend(two).addFriend(three);
-        two.addFriend(one).addFriend(three).addFriend(4).addFriend(5);
-        three.addFriend(one).addFriend(two).addFriend(6);
+        two.addFriend(4).addFriend(5).addFriend(one).addFriend(three);
+        three.addFriend(6).addFriend(one).addFriend(two);
 
         return one;
     }
