@@ -10,14 +10,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class Graph {
 
     public static void main(String[] args) {
-//        printGraphDF(buildPersonWithFriends(), 3);
+        printGraphDF(buildPersonWithFriends(), 3);
         printGraphBF(buildPersonWithFriends(), 3);
     }
 
     private static void print(Collection<Person> collection) {
         for (Person t : collection) {
-            System.out.println(t.id + ", ");
+            System.out.print(t.id + ", ");
         }
+        System.out.println();
     }
 
     private static void printGraphDF(Person root, int depth) {
@@ -46,28 +47,42 @@ public class Graph {
 
     private static List<Person> traverseBF(Person person, int depth) {
         List<Person> visited = new LinkedList<>();
+        if (depth == 0) {
+            return visited;
+        }
 
-        LinkedList<Person> queue = new LinkedList<>();
-        queue.add(person);
-
-        while(true) {
+        LinkedList<PersonHolder> queue = new LinkedList<>();
+        queue.add(new PersonHolder(person, 1));
+        while (true) {
             if (queue.isEmpty()) {
                 break;
             }
 
-            Person next = queue.removeFirst();
-            if (!visited.contains(next)) {
-                visited.add(next);
+            PersonHolder next = queue.removeFirst();
+            if (!visited.contains(next.person)) {
+                visited.add(next.person);
             }
-            for (Person friend : next.getFriends()) {
-                if (!visited.contains(friend)) {
-                    queue.add(friend);
+            if (next.depth < depth) {
+                for (Person friend : next.person.getFriends()) {
+                    if (!visited.contains(friend)) {
+                        queue.add(new PersonHolder(friend, next.depth + 1));
+                    }
                 }
             }
         }
 
 
         return visited;
+    }
+
+    private static class PersonHolder {
+        private final Person person;
+        private final int depth;
+
+        public PersonHolder(Person person, int depth) {
+            this.person = person;
+            this.depth = depth;
+        }
     }
 
     public static Person buildPersonWithFriends() {
