@@ -11,7 +11,8 @@ public class Graph {
 
     public static void main(String[] args) {
         printGraphDF(buildPersonWithFriends(), 3);
-        printGraphBF(buildPersonWithFriends(), 3);
+//        printGraphDF(buildPersonWithFriends(), 3);
+        printGraphDFNonRecrusive(buildPersonWithFriends(), 3);
     }
 
     private static void print(Collection<Person> collection) {
@@ -26,6 +27,24 @@ public class Graph {
         traverseDF(root, depth, visited);
         print(visited);
     }
+
+    private static void printGraphDFNonRecrusive(Person root, int depth) {
+        Set<Person> friends = new LinkedHashSet<>();
+        Stack<Person> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            Person next = stack.pop();
+            friends.add(next);
+            for (Person friend : next.getFriends()) {
+                if (!friends.contains(friend)) {
+                    stack.push(friend);
+                }
+            }
+        }
+        print(friends);
+    }
+
+
 
     private static void printGraphBF(Person person, int depth) {
         print(traverseBF(person, depth));
