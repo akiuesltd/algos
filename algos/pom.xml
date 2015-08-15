@@ -25,6 +25,16 @@
       <version>1.0</version>
     </dependency>
     <dependency>
+      <groupId>coursera.algo1</groupId>
+      <artifactId>stdlib</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>coursera.algo1</groupId>
+      <artifactId>algs4</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
       <version>2.6</version>
