@@ -1,6 +1,7 @@
 /**
  * n^2 + 2 nodes. i=0 is a special node that serves as root of top row,
  * i=n^2+1 is special node that serves as root of bottom row.
+ * These nodes are mapped to a one-dimensional array used by WeightedQuickUnionUF.
  * A node is full if it's connected to top.
  * Grid percolates if bottom is connected to top.
  *
@@ -9,8 +10,16 @@
  */
 public class Percolation {
     private final WeightedQuickUnionUF grid;
+
+    // size of matrix (n x n)
     private final int n;
+
+    // n^2 grid, plus special nodes for top & bottom.
+    // can be calculated on the fly, but keeping for ease and readability.
     private final int totalNodes;
+
+    // WeightedQuickUnionUF doesn't provide a way to check if a node is open.
+    // We maintain that separately here.
     private final int[] openStatus;
 
     public Percolation(int n) {
@@ -19,15 +28,16 @@ public class Percolation {
         }
         this.n = n;
         totalNodes = n * n + 2;
-        // n^2 grid, plus special nodes for top & bottom.
         grid = new WeightedQuickUnionUF(totalNodes);
         openStatus = new int[totalNodes];
+
+        // the special nodes are marked open upfront
+        // so that other nodes can connect to them.
         openStatus[0] = openStatus[totalNodes - 1] = 1;
     }
 
     public void open(int i, int j) {
         validate(i, j);
-        // find all open neighbours and connect to them.
         if (isOpen(i, j)) {
             return;
         }
@@ -35,6 +45,7 @@ public class Percolation {
         // set open status
         openStatus[getPosition(i, j)] = 1;
 
+        // connect with open neighbours
         connectUp(i, j);
         connectDown(i, j);
         connectLeft(i, j);
@@ -53,9 +64,10 @@ public class Percolation {
     }
 
     public boolean percolates() {
-        return grid.find(totalNodes - 1) == 0;
+        return grid.connected(0, totalNodes -1);
     }
 
+    // get position of node(i, j) on the one dimensional array.
     private int getPosition(int i, int j) {
         if (i < 0) { //before the first row
             return 0;
@@ -108,6 +120,15 @@ public class Percolation {
         }
     }
 
+    public void printGrid() {
+        for (int i=0; i < n; i++) {
+            for (int j=0; j<n; j++) {
+                System.out.print((isOpen(i, j) ? "x" : " ") + " ");
+            }
+            System.out.println();
+        }
+    }
+
     public static void main(String[] args) {
         Percolation percolation = new Percolation(2);
         System.out.println(percolation.isOpen(0, 0));
@@ -126,6 +147,7 @@ public class Percolation {
         percolation.open(0, 1);
         System.out.println(percolation.isFull(1, 1));
         System.out.println(percolation.percolates());
+        percolation.printGrid();
     }
 
 }
