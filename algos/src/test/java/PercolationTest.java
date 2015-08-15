@@ -9,7 +9,7 @@ public class PercolationTest {
 
     @Test
     public void testInput() {
-        In in = new In(this.getClass().getResource("percolation/input6.txt"));
+        In in = new In(this.getClass().getResource("percolation/input20.txt"));
         int n = in.readInt();
         int[] all = in.readAllInts();
         Percolation percolation = new Percolation(n);
@@ -20,7 +20,7 @@ public class PercolationTest {
                 percolation.open(all[i], all[i + 1]);
             }
             Assert.assertTrue(percolation.isOpen(all[i], all[i + 1]));
-            if (all[i] == 2 && all[i+1] == 1) {
+            if (all[i] == 18 && all[i+1] == 1) {
                 System.out.println("open? " + percolation.isOpen(all[i], all[i + 1]));
                 System.out.println("full?" + percolation.isFull(all[i], all[i + 1]));
                 printGrid(percolation, n);
@@ -31,7 +31,6 @@ public class PercolationTest {
     }
 
     private void printGrid(Percolation percolation, int n) {
-        System.out.println("1 2 3 4 5 6 7 8 9 10");
         for (int i = 1; i <= n; i++) {
             for (int j = 1; j <= n; j++) {
                 System.out.print(marker(percolation, i, j) + " ");
