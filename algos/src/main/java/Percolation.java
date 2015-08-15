@@ -33,7 +33,28 @@ public class Percolation {
 
         // the special nodes are marked open upfront
         // so that other nodes can connect to them.
-        openStatus[0] = openStatus[totalNodes - 1] = 1;
+        openStatus[0] = 1;
+        openStatus[totalNodes - 1] = 1;
+    }
+
+    public static void main(String[] args) {
+        Percolation percolation = new Percolation(2);
+        System.out.println(percolation.isOpen(0, 0));
+        System.out.println(percolation.isOpen(0, 1));
+        System.out.println(percolation.isOpen(1, 0));
+        System.out.println(percolation.isOpen(1, 1));
+        System.out.println(percolation.isFull(1, 1));
+        System.out.println("---");
+        percolation.open(0, 0);
+        percolation.open(1, 1);
+        System.out.println(percolation.isOpen(0, 0));
+        System.out.println(percolation.isOpen(1, 1));
+        System.out.println(percolation.isFull(1, 1));
+        System.out.println(percolation.percolates());
+        System.out.println("---");
+        percolation.open(0, 1);
+        System.out.println(percolation.isFull(1, 1));
+        System.out.println(percolation.percolates());
     }
 
     public void open(int i, int j) {
@@ -60,26 +81,26 @@ public class Percolation {
 
     public boolean isFull(int i, int j) {
         validate(i, j);
-        return isOpen(i, j) && grid.find(getPosition(i, j)) == 0;
+        return isOpen(i, j) && grid.connected(0, getPosition(i, j));
     }
 
     public boolean percolates() {
-        return grid.connected(0, totalNodes -1);
+        return grid.connected(0, totalNodes - 1);
     }
 
     // get position of node(i, j) on the one dimensional array.
     private int getPosition(int i, int j) {
-        if (i < 0) { //before the first row
+        if (i < 1) { //before the first row
             return 0;
-        } else if (i >= n) { // after the last row
+        } else if (i > n) { // after the last row
             return totalNodes - 1;
         }
 
-        return n * i + j + 1;
+        return n * (i - 1) + (j - 1) + 1;
     }
 
     private void validate(int i, int j) {
-        if (i < 0 || i >= n || j < 0 || j >= n) {
+        if (i < 1 || i > n || j < 1 || j > n) {
             throw new IllegalArgumentException();
         }
     }
@@ -103,7 +124,7 @@ public class Percolation {
     }
 
     private void connectLeft(int i, int j) {
-        if (j > 0) {
+        if (j > 1) {
             int left = getPosition(i, j - 1);
             if (isOpen(left)) {
                 grid.union(left, getPosition(i, j));
@@ -112,7 +133,7 @@ public class Percolation {
     }
 
     private void connectRight(int i, int j) {
-        if (j < n - 1) {
+        if (j < n) {
             int right = getPosition(i, j + 1);
             if (isOpen(right)) {
                 grid.union(right, getPosition(i, j));
@@ -120,34 +141,5 @@ public class Percolation {
         }
     }
 
-    public void printGrid() {
-        for (int i=0; i < n; i++) {
-            for (int j=0; j<n; j++) {
-                System.out.print((isOpen(i, j) ? "x" : " ") + " ");
-            }
-            System.out.println();
-        }
-    }
-
-    public static void main(String[] args) {
-        Percolation percolation = new Percolation(2);
-        System.out.println(percolation.isOpen(0, 0));
-        System.out.println(percolation.isOpen(0, 1));
-        System.out.println(percolation.isOpen(1, 0));
-        System.out.println(percolation.isOpen(1, 1));
-        System.out.println(percolation.isFull(1, 1));
-        System.out.println("---");
-        percolation.open(0, 0);
-        percolation.open(1, 1);
-        System.out.println(percolation.isOpen(0, 0));
-        System.out.println(percolation.isOpen(1, 1));
-        System.out.println(percolation.isFull(1, 1));
-        System.out.println(percolation.percolates());
-        System.out.println("---");
-        percolation.open(0, 1);
-        System.out.println(percolation.isFull(1, 1));
-        System.out.println(percolation.percolates());
-        percolation.printGrid();
-    }
 
 }

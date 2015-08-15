@@ -28,8 +28,9 @@ public class PercolationStats {
         Percolation percolation = new Percolation(n);
         int opened = 0;
         while (!percolation.percolates() && opened < n * n) {
-            int x = StdRandom.uniform(n);
-            int y = StdRandom.uniform(n);
+            // +1 on x & y because the stupid assignment uses 1 indexed arrays in test cases.
+            int x = StdRandom.uniform(n) + 1;
+            int y = StdRandom.uniform(n) + 1;
             if (!percolation.isOpen(x, y)) {
                 percolation.open(x, y);
                 opened++;
