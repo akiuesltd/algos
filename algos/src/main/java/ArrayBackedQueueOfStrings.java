@@ -1,5 +1,3 @@
-package com.akieus.algos.coursera;
-
 import java.io.PrintStream;
 
 /**
