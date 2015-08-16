@@ -1,5 +1,3 @@
-package com.akieus;
-
 /**
  * @author aks
  * @since 15/08/15

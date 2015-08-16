@@ -2,35 +2,41 @@
  * @author aks
  * @since 15/08/15
  */
-public class LinkedStackOfStrings {
+public class LinkedQueueOfStrings {
 
     public static void main(String[] args) {
-        LinkedStackOfStrings stack = new LinkedStackOfStrings();
-        String input = "to be or not to - be - - that - - - is";
+        LinkedQueueOfStrings queue = new LinkedQueueOfStrings();
+        String input = "to be or not to - be - - that - - - is - - the - question -";
         for(String token : input.split(" ")) {
             if (token.equals("-")) {
-                System.out.print(stack.pop() + " ");
+                System.out.print(queue.dequeue() + " ");
             } else {
-                stack.push(token);
+                queue.enqueue(token);
             }
         }
     }
 
-    private Node first = null;
-    public LinkedStackOfStrings() {
+    private Node first, last = null;
+    public LinkedQueueOfStrings() {
     }
 
-    public void push(String str) {
-        first = new Node(str, first);
+    public void enqueue(String str) {
+        Node newLast = new Node(str);
+        if (isEmpty()) {
+            first = last = newLast;
+        } else {
+            last.next = newLast;
+            last = newLast;
+        }
     }
 
-    public String pop() {
+    public String dequeue() {
         if (isEmpty()) {
             throw new IllegalStateException("Empty");
         }
-        String str = first.content;
+        String content = first.content;
         first = first.next;
-        return str;
+        return content;
     }
 
     public boolean isEmpty() {
