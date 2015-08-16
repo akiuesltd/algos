@@ -15,27 +15,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         items = (Item[]) new Object[1];
     }
 
-    public static void main(String[] args) {
-        RandomizedQueue<String> randy = new RandomizedQueue<>();
-        randy.enqueue("Anil");
-        randy.enqueue("Kumar");
-        randy.enqueue("Sharma");
-        print(randy.iterator());
-        System.out.println(randy.sample());
-        randy.dequeue();
-        randy.dequeue();
-        print(randy.iterator());
-        randy.dequeue();
-        print(randy.iterator());
-    }
-
-    private static <Item> void print(Iterator<Item> itr) {
-        while (itr.hasNext()) {
-            System.out.print(itr.next() + " ");
-        }
-        System.out.println();
-    }
-
     public boolean isEmpty() {
         return head == -1;
     }
@@ -48,6 +27,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public void enqueue(Item item) {
+        checkNotNull(item);
         if (head == items.length - 1) {
             resize();
         }
@@ -58,9 +38,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public Item dequeue() {
-        if (isEmpty()) {
-            throw new IllegalStateException();
-        }
+        checkNotEmpty();
 
         Item item = items[tail];
         items[tail] = null;
@@ -74,6 +52,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public Item sample() {
+        checkNotEmpty();
+
         int random = StdRandom.uniform(size());
         return items[tail + random];
     }
@@ -85,10 +65,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private void resize() {
         if (isEmpty() || size() == 0) {
             items = (Item[]) new Object[1];
-            head = tail = -1;
+            head = -1;
+            tail = -1;
         } else {
             Item[] copy = (Item[]) new Object[2 * size()];
-            for (int i = tail, j = 0; i <= head; ) {
+            for (int i = tail, j = 0; i <= head;) {
                 copy[j++] = items[i++];
             }
             items = copy;
@@ -97,6 +78,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
     }
 
+    private void checkNotNull(Item item) {
+        if (item == null) {
+            throw new NullPointerException();
+        }
+    }
+
+    private void checkNotEmpty() {
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+    }
     private class RandomizedIterator implements Iterator<Item> {
         private final Item[] copy;
         private int current = 0;
@@ -105,10 +97,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             if (isEmpty()) {
                 copy = (Item[]) new Object[0];
             } else {
-                int tail = RandomizedQueue.this.tail;
-                int head = RandomizedQueue.this.head;
+                int from = RandomizedQueue.this.tail;
+                int to = RandomizedQueue.this.head;
                 copy = (Item[]) new Object[RandomizedQueue.this.size()];
-                for (int i = tail, j = 0; i <= head; ) {
+                for (int i = from, j = 0; i <= to;) {
                     copy[j++] = items[i++];
                 }
                 StdRandom.shuffle(copy);
@@ -132,5 +124,26 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         public boolean hasNext() {
             return copy.length > 0 && current < copy.length;
         }
+    }
+
+    public static void main(String[] args) {
+        RandomizedQueue<String> randy = new RandomizedQueue<>();
+        randy.enqueue("Anil");
+        randy.enqueue("Kumar");
+        randy.enqueue("Sharma");
+        print(randy.iterator());
+        System.out.println(randy.sample());
+        randy.dequeue();
+        randy.dequeue();
+        print(randy.iterator());
+        randy.dequeue();
+        print(randy.iterator());
+    }
+
+    private static <Item> void print(Iterator<Item> itr) {
+        while (itr.hasNext()) {
+            System.out.print(itr.next() + " ");
+        }
+        System.out.println();
     }
 }

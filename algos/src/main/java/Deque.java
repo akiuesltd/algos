@@ -6,32 +6,6 @@ import java.util.NoSuchElementException;
  * @since 16/08/15
  */
 public class Deque<Item> implements Iterable<Item> {
-    public static void main(String[] args) {
-        Deque<String> deque = new Deque<>();
-        deque.addFirst("Kumar");
-        deque.addLast("Sharma");
-        deque.addFirst("Anil");
-        print(deque.iterator());
-        System.out.println(deque.size());
-        System.out.println(deque.removeFirst());
-        System.out.println(deque.removeLast());
-        System.out.println(deque.removeLast());
-        deque.addFirst("Anil");
-        System.out.println(deque.removeLast());
-        deque.addFirst("Anil");
-        System.out.println(deque.removeFirst());
-        deque.addLast("Anil");
-        System.out.println(deque.removeFirst());
-        deque.addLast("Anil");
-        System.out.println(deque.removeLast());
-    }
-
-    private static <Item> void print(Iterator<Item> itr) {
-        while (itr.hasNext()) {
-            System.out.print(itr.next() + " ");
-        }
-    }
-
     private Node<Item> first = null;
     private Node<Item> last = null;
     private int size = 0;
@@ -105,29 +79,7 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public Iterator<Item> iterator() {
-        return new Iterator<Item>() {
-            private Node<Item> current = Deque.this.first;
-
-            @Override
-            public boolean hasNext() {
-                return current != null;
-            }
-
-            @Override
-            public Item next() {
-                if (!hasNext()) {
-                    throw new NoSuchElementException();
-                }
-                Item item = current.item;
-                current = current.next;
-                return item;
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException("remove");
-            }
-        };
+        return new DequeIterator();
     }
 
     private void checkNotNull(Item item) {
@@ -157,4 +109,55 @@ public class Deque<Item> implements Iterable<Item> {
             this.prev = prev;
         }
     }
+
+    private class DequeIterator implements Iterator {
+        private Node<Item> current = Deque.this.first;
+
+        @Override
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        @Override
+        public Item next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            Item item = current.item;
+            current = current.next;
+            return item;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("remove");
+        }
+    }
+
+    public static void main(String[] args) {
+        Deque<String> deque = new Deque<>();
+        deque.addFirst("Kumar");
+        deque.addLast("Sharma");
+        deque.addFirst("Anil");
+        print(deque.iterator());
+        System.out.println(deque.size());
+        System.out.println(deque.removeFirst());
+        System.out.println(deque.removeLast());
+        System.out.println(deque.removeLast());
+        deque.addFirst("Anil");
+        System.out.println(deque.removeLast());
+        deque.addFirst("Anil");
+        System.out.println(deque.removeFirst());
+        deque.addLast("Anil");
+        System.out.println(deque.removeFirst());
+        deque.addLast("Anil");
+        System.out.println(deque.removeLast());
+    }
+
+    private static <Item> void print(Iterator<Item> itr) {
+        while(itr.hasNext()) {
+            System.out.print(itr.next() + " ");
+        }
+    }
+
 }
