@@ -155,7 +155,7 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     private static <Item> void print(Iterator<Item> itr) {
-        while(itr.hasNext()) {
+        while (itr.hasNext()) {
             System.out.print(itr.next() + " ");
         }
     }
