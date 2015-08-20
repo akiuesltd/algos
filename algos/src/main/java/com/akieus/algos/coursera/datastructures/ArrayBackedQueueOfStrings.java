@@ -1,3 +1,5 @@
+package com.akieus.algos.coursera.datastructures;
+
 import java.io.PrintStream;
 
 /**

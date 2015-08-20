@@ -1,4 +1,4 @@
-/**
+import java.lang.IllegalArgumentException;import java.lang.String;import java.lang.System; /**
  * n^2 + 2 nodes. i=0 is a special node that serves as root of top row,
  * i=n^2+1 is special node that serves as root of bottom row.
  * These nodes are mapped to a one-dimensional array used by WeightedQuickUnionUF.
@@ -39,21 +39,21 @@ public class Percolation {
 
     public static void main(String[] args) {
         Percolation percolation = new Percolation(2);
-        System.out.println(percolation.isOpen(0, 0));
-        System.out.println(percolation.isOpen(0, 1));
-        System.out.println(percolation.isOpen(1, 0));
         System.out.println(percolation.isOpen(1, 1));
-        System.out.println(percolation.isFull(1, 1));
+        System.out.println(percolation.isOpen(1, 2));
+        System.out.println(percolation.isOpen(2, 1));
+        System.out.println(percolation.isOpen(2, 2));
+        System.out.println(percolation.isFull(2, 2));
         System.out.println("---");
-        percolation.open(0, 0);
         percolation.open(1, 1);
-        System.out.println(percolation.isOpen(0, 0));
+        percolation.open(2, 2);
         System.out.println(percolation.isOpen(1, 1));
-        System.out.println(percolation.isFull(1, 1));
+        System.out.println(percolation.isOpen(2, 2));
+        System.out.println(percolation.isFull(2, 2));
         System.out.println(percolation.percolates());
         System.out.println("---");
-        percolation.open(0, 1);
-        System.out.println(percolation.isFull(1, 1));
+        percolation.open(1, 2);
+        System.out.println(percolation.isFull(2, 2));
         System.out.println(percolation.percolates());
     }
 

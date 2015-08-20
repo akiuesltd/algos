@@ -1,3 +1,5 @@
+package com.akieus.algos.coursera.datastructures;
+
 /**
  * @author aks
  * @since 15/08/15

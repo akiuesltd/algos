@@ -1,3 +1,5 @@
+package com.akieus.algos.coursera.sort;
+
 import java.util.Arrays;
 
 /**
@@ -8,7 +10,7 @@ import java.util.Arrays;
  *
  * Optimisations
  *  - During merge don't continue copying if remaining elements are already sorted
- *  - Use Insertion sort for array size < 7
+ *  - Use com.akieus.algos.coursera.lib.Insertion sort for array size < 7
  *  - Challenge - avoid copy operations by doing merge into aux array.
  * @author aks
  * @since 17/08/15

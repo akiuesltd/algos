@@ -1,4 +1,4 @@
-import java.util.Iterator;
+import java.lang.*;import java.lang.Iterable;import java.lang.NullPointerException;import java.lang.Object;import java.lang.Override;import java.lang.String;import java.lang.System;import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -109,7 +109,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         @Override
         public void remove() {
-            throw new UnsupportedOperationException();
+            throw new java.lang.UnsupportedOperationException();
         }
 
         @Override

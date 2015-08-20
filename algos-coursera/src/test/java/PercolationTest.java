@@ -1,5 +1,5 @@
 import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.Test;import java.lang.String;import java.lang.System;
 
 /**
  * @author aks
