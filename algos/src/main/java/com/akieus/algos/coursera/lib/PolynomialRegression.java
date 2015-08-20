@@ -1,4 +1,6 @@
-package com.akieus.algos.coursera.lib; /******************************************************************************
+package com.akieus.algos.coursera.lib;
+
+/******************************************************************************
  *  Compilation:  javac -cp .:jama.jar com.akieus.algos.coursera.lib.PolynomialRegression.java
  *  Execution:    java  -cp .:jama.jar com.akieus.algos.coursera.lib.PolynomialRegression
  *  Dependencies: jama.jar com.akieus.algos.coursera.lib.StdOut.java
