@@ -10,14 +10,14 @@ import java.util.Arrays;
  * @author aks
  * @since 17/08/15
  */
-public class QuickSortIterative extends Sort {
-    public QuickSortIterative() {
+public class QuickSort extends Sort {
+    public QuickSort() {
     }
 
     public static void main(String[] args) {
         int[] arr = new int[]{7, 6, 1, 2, 5, 9, 4, 3};
 //        int[] arr = new int[]{1, 2, 4, 3};
-        Sort sort = new QuickSortIterative();
+        Sort sort = new QuickSort();
         sort.sort(arr);
         System.out.println(Arrays.toString(arr));
         System.out.println("checkCount=" + sort.checkCount);
