@@ -11,23 +11,21 @@ import static com.akieus.algos.coursera.Utils.*;
  * 2) To delete, move the last element to it's position (thereby deleting it), then sink this
  * element down to it's proper place.
  * <p>
- * One difference from the algo in course - I keep the smallest element at top, whereas
- * coursework keeps biggest element at top. Just different sort order, otherwise same algo.
  *
  * @author aks
  * @since 21/08/15
  */
-public class BinaryHeap {
+public class BinaryMaxHeap {
 
     /*******************************************************************************/
     private int[] heap = new int[2];
     private int size;
 
-    public BinaryHeap() {
+    public BinaryMaxHeap() {
     }
 
     public static void main(String[] args) {
-        BinaryHeap heap = new BinaryHeap();
+        BinaryMaxHeap heap = new BinaryMaxHeap();
         heap.add(1);
         heap.add(4);
         heap.add(2);
@@ -68,10 +66,10 @@ public class BinaryHeap {
         while (2 * i <= size) {
             int child = 2 * i;
             if (child < size // i.e the other child exists
-                    && less(heap[child + 1], heap[child])) { // and other is smaller
+                    && less(heap[child], heap[child + 1])) { // and other is smaller
                 child++;
             }
-            if (less(heap[child], heap[i])) {
+            if (less(heap[i], heap[child])) {
                 exch(heap, i, child);
             }
             i = child;
@@ -80,7 +78,7 @@ public class BinaryHeap {
 
     // promote to parent while larger than parent
     private void swim(int x) {
-        while (x > 1 && less(heap[x], heap[x / 2])) {
+        while (x > 1 && less(heap[x / 2], heap[x])) {
             exch(heap, x, x / 2);
             x = x / 2;
         }
