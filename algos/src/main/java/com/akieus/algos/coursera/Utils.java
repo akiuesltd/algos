@@ -58,5 +58,14 @@ public class Utils {
         return copy;
     }
 
-
+    public static <Key> Key[] shrinkIfCan(Key[] arr, int size) {
+        if (size > arr.length / 4) {
+            return arr;
+        }
+        Key[] copy = (Key[]) new Comparable[size * 2];
+        for (int i = 0; i < size; i++) {
+            copy[i] = arr[i];
+        }
+        return copy;
+    }
 }

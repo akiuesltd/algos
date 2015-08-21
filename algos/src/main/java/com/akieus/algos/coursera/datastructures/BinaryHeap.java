@@ -5,6 +5,15 @@ import java.util.Arrays;
 import static com.akieus.algos.coursera.Utils.*;
 
 /**
+ * Binary Heap impl.
+ * <p>
+ * 1) To add a new element, add it to the end, and then swim it up until it reaches it right level
+ * 2) To delete, move the last element to it's position (thereby deleting it), then sink this
+ * element down to it's proper place.
+ * <p>
+ * One difference from the algo in course - I keep the smallest element at top, whereas
+ * coursework keeps biggest element at top. Just different sort order, otherwise same algo.
+ *
  * @author aks
  * @since 21/08/15
  */
@@ -62,7 +71,7 @@ public class BinaryHeap {
                     && less(heap[child + 1], heap[child])) { // and other is smaller
                 child++;
             }
-            if (heap[i] > heap[child]) {
+            if (less(heap[child], heap[i])) {
                 exch(heap, i, child);
             }
             i = child;
