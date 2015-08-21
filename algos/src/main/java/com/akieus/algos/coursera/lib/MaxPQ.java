@@ -1,4 +1,6 @@
-package com.akieus.algos.coursera.lib; /******************************************************************************
+package com.akieus.algos.coursera.lib;
+
+/******************************************************************************
  *  Compilation:  javac com.akieus.algos.coursera.lib.MaxPQ.java
  *  Execution:    java com.akieus.algos.coursera.lib.MaxPQ < input.txt
  *  Dependencies: com.akieus.algos.coursera.lib.StdIn.java com.akieus.algos.coursera.lib.StdOut.java
