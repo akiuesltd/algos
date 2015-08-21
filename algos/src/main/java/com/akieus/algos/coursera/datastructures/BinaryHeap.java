@@ -2,8 +2,7 @@ package com.akieus.algos.coursera.datastructures;
 
 import java.util.Arrays;
 
-import static com.akieus.algos.coursera.Utils.exch;
-import static com.akieus.algos.coursera.Utils.less;
+import static com.akieus.algos.coursera.Utils.*;
 
 /**
  * @author aks
@@ -34,38 +33,39 @@ public class BinaryHeap {
         System.out.println(Arrays.toString(heap.heap));
         heap.remove(3);
         System.out.println(Arrays.toString(heap.heap));
+        heap.remove(1);
+        heap.remove(1);
+        System.out.println(Arrays.toString(heap.heap));
     }
 
     public void add(int i) {
         heap[++size] = i;
         swim(size);
-        resizeIfRequired();
+        heap = resizeIfRequired(heap, size + 1);
     }
 
     public void remove(int i) {
+        if (i > size) {
+            throw new IllegalArgumentException();
+        }
         heap[i] = heap[size--];
         // not required, only doing this to visualize it being deleted.
         heap[size + 1] = 0;
         sink(i);
+        heap = shrinkIfCan(heap, size + 1);
     }
 
     private void sink(int i) {
-        while (true) {
-            int child1 = 2 * i;
-            if (child1 > size) {
-                break;
+        while (2 * i <= size) {
+            int child = 2 * i;
+            if (child < size // i.e the other child exists
+                    && less(heap[child + 1], heap[child])) { // and other is smaller
+                child++;
             }
-
-            int smallerChild = child1;
-
-            int child2 = 2 * i + 1;
-            if (child2 <= size && less(heap[child2], heap[child1])) {
-                smallerChild = child2;
+            if (heap[i] > heap[child]) {
+                exch(heap, i, child);
             }
-            if (heap[i] > heap[smallerChild]) {
-                exch(heap, i, smallerChild);
-            }
-            i = smallerChild;
+            i = child;
         }
     }
 
@@ -76,20 +76,4 @@ public class BinaryHeap {
             x = x / 2;
         }
     }
-
-    private void resizeIfRequired() {
-        if (isFull()) {
-            int[] copy = new int[heap.length * 2];
-            for (int i = 0; i < heap.length; i++) {
-                copy[i] = heap[i];
-            }
-            heap = copy;
-        }
-    }
-
-    private boolean isFull() {
-        return size == heap.length - 1;
-    }
-
-
 }

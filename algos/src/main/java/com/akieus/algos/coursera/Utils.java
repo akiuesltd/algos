@@ -25,4 +25,38 @@ public class Utils {
         arr[j] = swap;
     }
 
+    public static <Key> Key[] resizeIfRequired(Key[] arr, int size) {
+        if (size < arr.length) {
+            return arr;
+        }
+        Key[] copy = (Key[]) (new Comparable[size * 2]);
+        for (int i = 0; i < size; i++) {
+            copy[i] = arr[i];
+        }
+        return copy;
+    }
+
+    public static int[] resizeIfRequired(int[] arr, int size) {
+        if (size < arr.length) {
+            return arr;
+        }
+        int[] copy = new int[arr.length * 2];
+        for (int i = 0; i < arr.length; i++) {
+            copy[i] = arr[i];
+        }
+        return copy;
+    }
+
+    public static int[] shrinkIfCan(int[] arr, int size) {
+        if (size > arr.length / 4) {
+            return arr;
+        }
+        int[] copy = new int[size * 2];
+        for (int i = 0; i < size; i++) {
+            copy[i] = arr[i];
+        }
+        return copy;
+    }
+
+
 }
