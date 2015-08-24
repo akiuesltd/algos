@@ -1,5 +1,7 @@
 package com.akieus.algos.coursera.datastructures;
 
+import com.akieus.algos.coursera.lib.Queue;
+
 import java.util.Iterator;
 
 /**
@@ -30,9 +32,25 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
         tree.put("M", 9);
         tree.put("A", 10);
 
-        System.out.println(tree.get("A"));
-        System.out.println(tree.get("M"));
-        System.out.println(tree.get("K"));
+        Iterator<String> itr = tree.iterator();
+        while (itr.hasNext()) {
+            System.out.print(itr.next() + ", ");
+        }
+        System.out.println();
+
+        tree.printTree();
+
+        System.out.println(tree.floor("R"));
+        System.out.println(tree.floor("O"));
+        System.out.println(tree.floor("K"));
+    }
+
+    private void printTree() {
+        Queue<Node> queue = new Queue<>();
+        traverseNodes(queue, root);
+        for (Node node : queue) {
+            System.out.println(node.key + "> " + node.left + ", " + node.right);
+        }
     }
 
     public void put(Key key, Value value) {
@@ -41,7 +59,7 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
 
     private Node put(Node node, Key key, Value value) {
         if (node == null) return new Node(key, value);
-        int cmp = node.key.compareTo(key);
+        int cmp = key.compareTo(node.key);
         if (cmp < 0) {
             node.left = put(node.left, key, value);
         } else if (cmp > 0) {
@@ -67,8 +85,43 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
         throw new UnsupportedOperationException();
     }
 
+    public Key floor(Key key) {
+        Node node = floor(key, root);
+        return node == null ? null : node.key;
+    }
+
+    private Node floor(Key key, Node node) {
+        if (node == null) return null;
+
+        int cmp = key.compareTo(node.key);
+        if (cmp == 0) {
+            return node;
+        } else if (cmp < 0) {
+            return floor(key, node.left);
+        } else {
+            Node floor = floor(key, node.right);
+            return floor == null ? node : floor;
+        }
+    }
+
     public Iterator<Key> iterator() {
-        throw new UnsupportedOperationException();
+        Queue<Key> queue = new Queue<>();
+        traverse(queue, root);
+        return queue.iterator();
+    }
+
+    private void traverse(Queue<Key> queue, Node node) {
+        if (node == null) return;
+        traverse(queue, node.left);
+        queue.enqueue(node.key);
+        traverse(queue, node.right);
+    }
+
+    private void traverseNodes(Queue<Node> queue, Node node) {
+        if (node == null) return;
+        traverseNodes(queue, node.left);
+        queue.enqueue(node);
+        traverseNodes(queue, node.right);
     }
 
     private class Node {
@@ -80,6 +133,11 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
         public Node(Key key, Value value) {
             this.key = key;
             this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return key.toString();
         }
     }
 }
