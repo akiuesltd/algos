@@ -31,61 +31,36 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
         tree.put("A", 10);
 
         System.out.println(tree.get("A"));
-        System.out.println(tree.get("N"));
+        System.out.println(tree.get("M"));
         System.out.println(tree.get("K"));
     }
 
-    public Value put(Key key, Value value) {
-        // special case for first entry.
-        Node newNode = new Node(key, value);
-        if (root == null) {
-            root = newNode;
-            return null;
-        }
+    public void put(Key key, Value value) {
+        root = put(root, key, value);
+    }
 
-        Node existing = search(key, root, null);
-
-
-        int cmp = key.compareTo(existing.key);
-        if (cmp == 0) {
-            Value oldValue = existing.value;
-            existing.value = value;
-            return oldValue;
-        } else if (cmp < 0) {
-            existing.left = newNode;
+    private Node put(Node node, Key key, Value value) {
+        if (node == null) return new Node(key, value);
+        int cmp = node.key.compareTo(key);
+        if (cmp < 0) {
+            node.left = put(node.left, key, value);
+        } else if (cmp > 0) {
+            node.right = put(node.right, key, value);
         } else {
-            existing.right = newNode;
+            node.value = value;
         }
-        return null;
+        return node;
     }
 
     public Value get(Key key) {
-        if (key == null) {
-            throw new IllegalArgumentException();
-        }
-        if (root == null) {
-            return null;
-        }
-
-        Node node = search(key, root, null);
-        if (key.equals(node.key)) {
-            return node.value;
+        Node node = root;
+        while (node != null) {
+            int cmp = node.key.compareTo(key);
+            if (cmp < 0) node = node.left;
+            else if (cmp > 0) node = node.right;
+            else return node.value;
         }
         return null;
-    }
-
-    private Node search(Key key, Node node, Node parent) {
-        if (node == null) {
-            return parent;
-        }
-        int cmp = key.compareTo(node.key);
-        if (cmp == 0) {
-            return node;
-        } else if (cmp < 0) {
-            return search(key, node.left, node);
-        } else {
-            return search(key, node.right, node);
-        }
     }
 
     public Value delete(Key key) {
