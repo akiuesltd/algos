@@ -32,6 +32,19 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
         tree.put("M", 9);
         tree.put("A", 10);
 
+        /**
+         * That should create following tree
+         *            A
+         *             \
+         *             N
+         *           /   \
+         *          I     S
+         *         / \    /
+         *        H   L  R
+         *             \
+         *              M
+         */
+
         Iterator<String> itr = tree.iterator();
         while (itr.hasNext()) {
             System.out.print(itr.next() + ", ");
@@ -44,7 +57,23 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
         System.out.println(tree.floor("O"));
         System.out.println(tree.floor("K"));
 
+        // test tree size (note: there are two overwrites for A, should be 8 nodes)
         System.out.println(tree.size(tree.root));
+
+        // test min of N
+        System.out.println(tree.min(tree.root.right));
+
+        // delete H, should have 7 elements now, and cannot find H
+        tree.deleteMin(tree.root.right);
+        System.out.println(tree.size(tree.root));
+        System.out.println(tree.get("H"));
+        // add it back and test
+        tree.put("H", 6);
+        System.out.println(tree.get("H"));
+
+        tree.delete("I");
+        System.out.println(tree.get("I"));
+
     }
 
     // TODO - implement properly
@@ -87,7 +116,7 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
     public Value get(Key key) {
         Node node = root;
         while (node != null) {
-            int cmp = node.key.compareTo(key);
+            int cmp = key.compareTo(node.key);
             if (cmp < 0) node = node.left;
             else if (cmp > 0) node = node.right;
             else return node.value;
@@ -95,8 +124,47 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
         return null;
     }
 
-    public Value delete(Key key) {
-        throw new UnsupportedOperationException();
+    public void delete(Key key) {
+        delete(key, root);
+    }
+
+    private Node delete(Key key, Node node) {
+        if (node == null) return null;
+
+        int cmp = key.compareTo(node.key);
+        if (cmp < 0) {
+            node.left = delete(key, node.left);
+        } else if (cmp > 0) {
+            node.right = delete(key, node.right);
+        } else {
+            if (node.left == null) {
+                node = node.right;
+            }
+            if (node.right == null) {
+                node = node.left;
+            }
+
+            Node min = min(node.right);
+            min.right = deleteMin(node.right);
+            min.left = node.left;
+            node = min;
+        }
+
+        node.count = size(node.left) + 1 + size(node.right);
+        return node;
+    }
+
+    public Node min(Node node) {
+        if (node.left == null) return node;
+        return min(node.left);
+    }
+
+    public Node deleteMin(Node node) {
+        if (node.left == null) return node.right;
+
+        node.left = deleteMin(node.left);
+        node.count = size(node.left) + 1 + size(node.right);
+        return node;
     }
 
     public Key floor(Key key) {
