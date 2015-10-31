@@ -1,0 +1,35 @@
+package com.akieus.stst;
+
+public enum PriceSource {
+    SOURCE1,
+    SOURCE2,
+    SOURCE3,
+    SOURCE4,
+    SOURCE5,
+    SOURCE6,
+    SOURCE7,
+    SOURCE8,
+    SOURCE9,
+    SOURCE10,
+    SOURCE11,
+    SOURCE12,
+    SOURCE13,
+    SOURCE14,
+    SOURCE15,
+    SOURCE16,
+    SOURCE17,
+    SOURCE18,
+    SOURCE19,
+    SOURCE20,
+    SOURCE21,
+    SOURCE22,
+    SOURCE23,
+    SOURCE24,
+    SOURCE25,
+    SOURCE26,
+    SOURCE27,
+    SOURCE28,
+    SOURCE29,
+    SOURCE30;
+
+}
