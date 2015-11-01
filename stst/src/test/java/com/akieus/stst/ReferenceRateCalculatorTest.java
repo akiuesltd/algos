@@ -104,7 +104,7 @@ public class ReferenceRateCalculatorTest {
 
         calculator.onConfiguration(anotherSimpleConfiguration());
         assertThat(calculator.calculate().isStale(), is(true));
-        calculator.onFxPrice(new FxPriceImpl(1.1, 1.2, PriceSource.SOURCE1, PriceProvider.PROVIDER1));
+        calculator.onFxPrice(new FxPriceImpl(1.1, 1.2, PriceSource.SOURCE4, PriceProvider.PROVIDER1));
         assertThat(calculator.calculate().getBid(), is(closeTo(1.15, 0.01)));
     }
 

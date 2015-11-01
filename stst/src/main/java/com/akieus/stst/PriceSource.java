@@ -30,6 +30,5 @@ public enum PriceSource {
     SOURCE27,
     SOURCE28,
     SOURCE29,
-    SOURCE30;
-
+    SOURCE30
 }

@@ -2,47 +2,65 @@ package com.akieus.stst;
 
 import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import static com.akieus.stst.Market.ALL_MARKETS;
+import static com.akieus.stst.Market.calculateMarketId;
 
 public class ReferenceRateCalculatorImpl implements ReferenceRateCalculator {
 
-    private static final FxPrice STALE_PRICE = new FxPriceImpl(Double.NaN, Double.NaN, true, null, null);
+    private static final FxPrice STALE_PRICE = new FxPriceImpl(0.0d, 0.0d, true, null, null);
 
-    private Percentile percentile = new Percentile();
-    private Map<Market, FxPrice> prices = new HashMap<>();
+    private final Percentile percentile = new Percentile();
+
+    // IDs of configured markes (3 to 15 markets typically)
+    private int[] configuredMarkets = {};
+
+    // an array that can hold mid-prices for {@link ALL_MARKETS} but only has valid values
+    // at indexes that correspond to configuredMarkets.
+    private double[] allMidPrices = new double[ALL_MARKETS.length];
+    private double[] validMidPrices = {};
 
     @Override
     public FxPrice calculate() {
-        if (prices.isEmpty()) {
+        int count = collectValidPrices();
+        if (count == 0) {
             // assumed that we should return stale price if there are no prices at all
             // besides (of course) if all prices are stale.
             return STALE_PRICE;
         }
 
-        return calculateMedian(prices.values());
+        return calculateMedianOfValidPrices(count);
     }
 
-    private FxPrice calculateMedian(Collection<FxPrice> priceSet) {
-        double[] mids = new double[priceSet.size()];
-        int i = 0;
-        for (FxPrice fxPrice : priceSet) {
-            mids[i++] = (fxPrice.getBid() + fxPrice.getOffer()) / 2;
-        }
-
-        double median = percentile.evaluate(mids, 50); // median is 50th percentile
+    private FxPrice calculateMedianOfValidPrices(int count) {
+        double median = percentile.evaluate(validMidPrices, 0, count, 50); // median is 50th percentile
+        // defensive copy, object creation possibly avoidable if the API returned just the price.
         return new FxPriceImpl(median);
+    }
+
+    /**
+     * Copies all valid mid-prices to validMidPrices array, and returns the count.
+     * Only values up to the index of 'count' are valid, rest are garbage that's
+     * not been cleaned up.
+     */
+    private int collectValidPrices() {
+        int count = 0;
+        for (int configuredMarket : configuredMarkets) {
+            double midPrice = allMidPrices[configuredMarket];
+            if (midPrice != 0.0d) {
+                validMidPrices[count++] = midPrice;
+            }
+        }
+        return count;
     }
 
     @Override
     public void onFxPrice(FxPrice fxPrice) {
-        Market market = getMarket(fxPrice);
+        int marketId = calculateMarketId(fxPrice.getSource(), fxPrice.getProvider());
         if (fxPrice.isStale()) {
-            prices.remove(market);
+            allMidPrices[marketId] = 0.0d;
         } else {
-            prices.put(market, fxPrice);
+            double mid = (fxPrice.getBid() + fxPrice.getOffer()) / 2;
+            allMidPrices[marketId] = mid;
         }
     }
 
@@ -52,6 +70,17 @@ public class ReferenceRateCalculatorImpl implements ReferenceRateCalculator {
 
     @Override
     public void onConfiguration(Configuration configuration) {
-        prices.clear();
+        // reset all prices
+        for (int i = 0; i < allMidPrices.length; i++) {
+            allMidPrices[i] = 0.0d;
+        }
+
+        // reset configured markets
+        validMidPrices = new double[configuration.getSize()];
+        configuredMarkets = new int[configuration.getSize()];
+        for (int i = 0; i < configuration.getSize(); i++) {
+            configuredMarkets[i] = calculateMarketId(configuration.getSource(i), configuration.getProvider(i));
+            validMidPrices[i] = 0.0d;
+        }
     }
 }
