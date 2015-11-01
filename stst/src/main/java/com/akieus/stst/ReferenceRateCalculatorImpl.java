@@ -2,6 +2,8 @@ package com.akieus.stst;
 
 import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 
+import java.util.Arrays;
+
 import static com.akieus.stst.Market.calculateMarketId;
 
 public class ReferenceRateCalculatorImpl implements ReferenceRateCalculator {
@@ -21,7 +23,7 @@ public class ReferenceRateCalculatorImpl implements ReferenceRateCalculator {
             return STALE_PRICE;
         }
 
-        double median = calculateMedianOfValidPrices(count);
+        double median = MedianCalculator.calculateMedian(validMidPrices, count);
         return new FxPriceImpl(median);
     }
 
@@ -47,10 +49,6 @@ public class ReferenceRateCalculatorImpl implements ReferenceRateCalculator {
 
     private double midPrice(final FxPrice fxPrice) {
         return (fxPrice.getBid() + fxPrice.getOffer()) / 2;
-    }
-
-    private double calculateMedianOfValidPrices(final int count) {
-        return percentile.evaluate(validMidPrices, 0, count, 50);
     }
 
     /**
