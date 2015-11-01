@@ -1,6 +1,7 @@
 package com.akieus.stst;
 
 public enum PriceProvider {
+    NULL_PROVIDER,
     PROVIDER1,
     PROVIDER2,
     PROVIDER3,
@@ -50,6 +51,6 @@ public enum PriceProvider {
     PROVIDER47,
     PROVIDER48,
     PROVIDER49,
-    PROVIDER50;
+    PROVIDER50
 
 }

@@ -10,15 +10,15 @@ public class FxPriceImpl implements FxPrice {
     private final PriceSource source;
     private final PriceProvider provider;
 
-    public FxPriceImpl(double mid) {
+    public FxPriceImpl(final double mid) {
         this(mid, mid, false, null, null);
     }
 
-    public FxPriceImpl(double bid, double offer, PriceSource source, PriceProvider provider) {
+    public FxPriceImpl(final double bid, final double offer, final PriceSource source, final PriceProvider provider) {
         this(bid, offer, false, source, provider);
     }
 
-    public FxPriceImpl(double bid, double offer, boolean stale, PriceSource source, PriceProvider provider) {
+    public FxPriceImpl(final double bid, final double offer, final boolean stale, final PriceSource source, final PriceProvider provider) {
         this.bid = bid;
         this.offer = offer;
         this.stale = stale;

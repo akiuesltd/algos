@@ -12,16 +12,11 @@ public class Market {
     public static final Market[] ALL_MARKETS;
 
     static {
-        // totalMarkets = all combinations of source & providers including null provider
-        int totalMarkets = PriceSource.values().length * (PriceProvider.values().length + 1);
+        int totalMarkets = PriceSource.values().length * PriceProvider.values().length;
         ALL_MARKETS = new Market[totalMarkets];
         for (PriceSource source : PriceSource.values()) {
-            // Deal with NULL provider as a special case
-            Market market = new Market(source, null);
-            ALL_MARKETS[market.getId()] = market;
-
             for (PriceProvider provider : PriceProvider.values()) {
-                market = new Market(source, provider);
+                Market market = new Market(source, provider);
                 ALL_MARKETS[market.getId()] = market;
             }
         }
@@ -31,19 +26,17 @@ public class Market {
     private final PriceProvider provider;
     private final int id;
 
-    public Market(PriceSource source, PriceProvider provider) {
+    public Market(final PriceSource source, final PriceProvider provider) {
         checkNotNull(source);
         this.source = source;
-        this.provider = provider;
-        id = calculateMarketId(source, provider);
+        this.provider = provider == null ? PriceProvider.NULL_PROVIDER : provider;
+        id = calculateMarketId(this.source, this.provider);
     }
 
-    public static int calculateMarketId(PriceSource source, PriceProvider provider) {
-//        if (provider == null) {
-//            return source.ordinal();
-//        }
-//        return provider.ordinal() << 6 | source.ordinal();
-        return source.ordinal() + PriceSource.values().length * (provider == null ? 0 : provider.ordinal() + 1);
+    public static int calculateMarketId(final PriceSource source, final PriceProvider provider) {
+        assert source != null;
+        assert provider != null;
+        return source.ordinal() + provider.ordinal() * PriceSource.values().length;
     }
 
     public PriceSource getSource() {

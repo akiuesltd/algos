@@ -10,10 +10,10 @@ import static org.hamcrest.Matchers.closeTo;
 public class ReferenceRateCalculatorTest {
     private static final Market TEST_MARKET_1 = new Market(PriceSource.SOURCE1, PriceProvider.PROVIDER1);
     private static final Market TEST_MARKET_2 = new Market(PriceSource.SOURCE1, PriceProvider.PROVIDER2);
-    private static final Market TEST_MARKET_3 = new Market(PriceSource.SOURCE2, null);
-    private static final Market TEST_MARKET_4 = new Market(PriceSource.SOURCE3, null);
+    private static final Market TEST_MARKET_3 = new Market(PriceSource.SOURCE2, PriceProvider.NULL_PROVIDER);
+    private static final Market TEST_MARKET_4 = new Market(PriceSource.SOURCE3, PriceProvider.NULL_PROVIDER);
     private static final Market TEST_MARKET_5 = new Market(PriceSource.SOURCE4, PriceProvider.PROVIDER1);
-    private static final Market TEST_MARKET_6 = new Market(PriceSource.SOURCE5, null);
+    private static final Market TEST_MARKET_6 = new Market(PriceSource.SOURCE5, PriceProvider.NULL_PROVIDER);
 
     @Test
     public void stalePriceReturnedIfNoConfiguration() {
@@ -85,7 +85,7 @@ public class ReferenceRateCalculatorTest {
         calculator.onConfiguration(aSimpleConfiguration());
         calculator.onFxPrice(new FxPriceImpl(1.1, 1.2, PriceSource.SOURCE1, PriceProvider.PROVIDER1));
         calculator.onFxPrice(new FxPriceImpl(1.3, 1.4, PriceSource.SOURCE1, PriceProvider.PROVIDER2));
-        calculator.onFxPrice(new FxPriceImpl(1.5, 1.6, PriceSource.SOURCE2, null));
+        calculator.onFxPrice(new FxPriceImpl(1.5, 1.6, PriceSource.SOURCE2, PriceProvider.NULL_PROVIDER));
 
         assertThat(calculator.calculate().getBid(), is(closeTo(1.35, 0.01)));
     }
