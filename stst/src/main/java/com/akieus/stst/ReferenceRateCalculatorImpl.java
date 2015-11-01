@@ -11,13 +11,13 @@ public class ReferenceRateCalculatorImpl implements ReferenceRateCalculator {
 
     private static final FxPrice STALE_PRICE = new FxPriceImpl(Double.NaN, Double.NaN, true, null, null);
 
-    Percentile percentile = new Percentile();
+    private Percentile percentile = new Percentile();
     private Map<Market, FxPrice> prices = new HashMap<>();
 
     @Override
     public FxPrice calculate() {
         if (prices.isEmpty()) {
-            // assumed that it's okay to return stale price if there are no prices at all
+            // assumed that we should return stale price if there are no prices at all
             // besides (of course) if all prices are stale.
             return STALE_PRICE;
         }
@@ -28,9 +28,7 @@ public class ReferenceRateCalculatorImpl implements ReferenceRateCalculator {
     private FxPrice calculateMedian(Collection<FxPrice> priceSet) {
         double[] mids = new double[priceSet.size()];
         int i = 0;
-        Iterator<FxPrice> itr = priceSet.iterator();
-        while (itr.hasNext()) {
-            FxPrice fxPrice = itr.next();
+        for (FxPrice fxPrice : priceSet) {
             mids[i++] = (fxPrice.getBid() + fxPrice.getOffer()) / 2;
         }
 
