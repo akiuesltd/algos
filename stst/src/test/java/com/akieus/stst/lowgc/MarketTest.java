@@ -1,5 +1,8 @@
-package com.akieus.stst;
+package com.akieus.stst.lowgc;
 
+import com.akieus.stst.PriceProvider;
+import com.akieus.stst.PriceSource;
+import com.akieus.stst.lowgc.Market;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;

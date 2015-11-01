@@ -1,11 +1,15 @@
-package com.akieus.stst;
+package com.akieus.stst.lowgc;
 
+import com.akieus.stst.Configuration;
+import com.akieus.stst.FxPrice;
+import com.akieus.stst.FxPriceImpl;
+import com.akieus.stst.ReferenceRateCalculator;
 import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 
-import static com.akieus.stst.Market.ALL_MARKETS;
-import static com.akieus.stst.Market.calculateMarketId;
+import static com.akieus.stst.lowgc.Market.ALL_MARKETS;
+import static com.akieus.stst.lowgc.Market.calculateMarketId;
 
-public class ReferenceRateCalculatorImpl implements ReferenceRateCalculator {
+public class LowGCReferenceRateCalculator implements ReferenceRateCalculator {
 
     private static final FxPrice STALE_PRICE = new FxPriceImpl(0.0d, 0.0d, true, null, null);
 

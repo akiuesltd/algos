@@ -5,27 +5,30 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ConfigurationImpl implements Configuration {
 
-    private final Market[] markets;
+    private final PriceSource[] sources;
+    private final PriceProvider[] providers;
 
-    public ConfigurationImpl(Market[] markets) {
-        checkNotNull(markets);
-        checkArgument(markets.length != 0);
+    public ConfigurationImpl(PriceSource[] sources, PriceProvider[] providers) {
+        checkNotNull(sources);
+        checkNotNull(providers);
+        checkArgument(sources.length == providers.length);
 
-        this.markets = markets;
+        this.sources = sources;
+        this.providers = providers;
     }
 
     public int getSize() {
-        return markets.length;
+        return sources.length;
     }
 
     public PriceSource getSource(int index) {
-        assert index < markets.length;
-        return markets[index].getSource();
+        assert index < sources.length;
+        return sources[index];
     }
 
     public PriceProvider getProvider(int index) {
-        assert index < markets.length;
-        return markets[index].getProvider();
+        assert index < providers.length;
+        return providers[index];
     }
 }
 

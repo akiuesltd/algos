@@ -1,5 +1,8 @@
-package com.akieus.stst;
+package com.akieus.stst.lowgc;
 
+
+import com.akieus.stst.PriceProvider;
+import com.akieus.stst.PriceSource;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -39,6 +42,10 @@ public class Market {
     }
 
     public static int calculateMarketId(PriceSource source, PriceProvider provider) {
+//        if (provider == null) {
+//            return source.ordinal();
+//        }
+//        return provider.ordinal() << 6 | source.ordinal();
         return source.ordinal() + PriceSource.values().length * (provider == null ? 0 : provider.ordinal() + 1);
     }
 
