@@ -1,8 +1,5 @@
-package com.akieus.stst.lowgc;
+package com.akieus.stst;
 
-
-import com.akieus.stst.PriceProvider;
-import com.akieus.stst.PriceSource;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

@@ -7,7 +7,13 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.closeTo;
 
-public abstract class ReferenceRateCalculatorTest {
+public class ReferenceRateCalculatorTest {
+    private static final Market TEST_MARKET_1 = new Market(PriceSource.SOURCE1, PriceProvider.PROVIDER1);
+    private static final Market TEST_MARKET_2 = new Market(PriceSource.SOURCE1, PriceProvider.PROVIDER2);
+    private static final Market TEST_MARKET_3 = new Market(PriceSource.SOURCE2, null);
+    private static final Market TEST_MARKET_4 = new Market(PriceSource.SOURCE3, null);
+    private static final Market TEST_MARKET_5 = new Market(PriceSource.SOURCE4, PriceProvider.PROVIDER1);
+    private static final Market TEST_MARKET_6 = new Market(PriceSource.SOURCE5, null);
 
     @Test
     public void stalePriceReturnedIfNoConfiguration() {
@@ -108,17 +114,15 @@ public abstract class ReferenceRateCalculatorTest {
         assertThat(calculator.calculate().getBid(), is(closeTo(1.15, 0.01)));
     }
 
-    protected abstract ReferenceRateCalculator newCalculator();
-
-    protected Configuration aSimpleConfiguration() {
-        return new ConfigurationImpl(
-                new PriceSource[]{PriceSource.SOURCE1, PriceSource.SOURCE1, PriceSource.SOURCE2, PriceSource.SOURCE3},
-                new PriceProvider[]{PriceProvider.PROVIDER1, PriceProvider.PROVIDER2, null, null});
+    private ReferenceRateCalculatorImpl newCalculator() {
+        return new ReferenceRateCalculatorImpl();
     }
 
-    protected Configuration anotherSimpleConfiguration() {
-        return new ConfigurationImpl(
-                new PriceSource[]{PriceSource.SOURCE4, PriceSource.SOURCE5},
-                new PriceProvider[]{PriceProvider.PROVIDER1, null});
+    private Configuration aSimpleConfiguration() {
+        return new ConfigurationImpl(new Market[]{TEST_MARKET_1, TEST_MARKET_2, TEST_MARKET_3, TEST_MARKET_4});
+    }
+
+    private Configuration anotherSimpleConfiguration() {
+        return new ConfigurationImpl(new Market[]{TEST_MARKET_5, TEST_MARKET_6});
     }
 }
