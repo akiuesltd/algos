@@ -3,25 +3,24 @@ package com.akieus.stst;
 import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.Random;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.number.IsCloseTo.closeTo;
 
-public class RunningMedianCalculatorTest {
+public class StreamingMedianCalculatorTest {
 
     @Test
     public void shouldReturnNanIfNoValues() {
-        RunningMedianCalculator calculator = aRunningCalculator();
+        StreamingMedianCalculator calculator = newCalculator();
         assertThat(Double.isNaN(calculator.getMedian()), is(true));
 
     }
 
     @Test
     public void shouldReturnTheValueIfSingleValue() {
-        RunningMedianCalculator calculator = aRunningCalculator();
+        StreamingMedianCalculator calculator = newCalculator();
         calculator.add(1.1);
         assertThat(calculator.getMedian(), is(closeTo(1.1, 0.0001)));
 
@@ -29,7 +28,7 @@ public class RunningMedianCalculatorTest {
 
     @Test
     public void shouldReturnTheValueIfTwoSameValues() {
-        RunningMedianCalculator calculator = aRunningCalculator();
+        StreamingMedianCalculator calculator = newCalculator();
         calculator.add(1.1);
         calculator.add(1.1);
         assertThat(calculator.getMedian(), is(closeTo(1.1, 0.0001)));
@@ -38,7 +37,7 @@ public class RunningMedianCalculatorTest {
 
     @Test
     public void shouldReturnMidValueIfTwoDistinctValues() {
-        RunningMedianCalculator calculator = aRunningCalculator();
+        StreamingMedianCalculator calculator = newCalculator();
         calculator.add(1.1);
         calculator.add(1.2);
         assertThat(calculator.getMedian(), is(closeTo(1.15, 0.0001)));
@@ -47,7 +46,7 @@ public class RunningMedianCalculatorTest {
 
     @Test
     public void shouldReturnMedianValueIfThreeDistinctValuesUnordered() {
-        RunningMedianCalculator calculator = aRunningCalculator();
+        StreamingMedianCalculator calculator = newCalculator();
         calculator.add(1.1);
         calculator.add(1.3);
         calculator.add(1.2);
@@ -57,7 +56,7 @@ public class RunningMedianCalculatorTest {
 
     @Test
     public void removingAValueShouldHaveDesiredEffect() {
-        RunningMedianCalculator calculator = aRunningCalculator();
+        StreamingMedianCalculator calculator = newCalculator();
         calculator.add(1.1);
         calculator.add(1.3);
         calculator.add(1.2);
@@ -69,7 +68,7 @@ public class RunningMedianCalculatorTest {
 
     @Test
     public void replacingAValueShouldHaveDesiredEffect() {
-        RunningMedianCalculator calculator = aRunningCalculator();
+        StreamingMedianCalculator calculator = newCalculator();
         calculator.add(1.1);
         calculator.add(1.3);
         calculator.add(1.2);
@@ -89,7 +88,7 @@ public class RunningMedianCalculatorTest {
     private void randomInsertionTest() {
         int n = 16;
 
-        RunningMedianCalculator calculator = new RunningMedianCalculator(n);
+        StreamingMedianCalculator calculator = new StreamingMedianCalculator(n);
         Random random = new Random();
         double[] values = new double[n];
         for (int i = 0; i < n; i++) {
@@ -112,7 +111,7 @@ public class RunningMedianCalculatorTest {
     private void randomUpdateTest() {
         int n = 16;
 
-        RunningMedianCalculator calculator = new RunningMedianCalculator(n);
+        StreamingMedianCalculator calculator = new StreamingMedianCalculator(n);
         Random random = new Random();
         double[] values = new double[n];
         for (int i = 0; i < n; i++) {
@@ -152,7 +151,7 @@ public class RunningMedianCalculatorTest {
         return new Percentile().evaluate(values, 0, count, 50);
     }
 
-    private RunningMedianCalculator aRunningCalculator() {
-        return new RunningMedianCalculator(8);
+    private StreamingMedianCalculator newCalculator() {
+        return new StreamingMedianCalculator(8);
     }
 }

@@ -8,7 +8,7 @@ public class ReferenceRateCalculatorImpl implements ReferenceRateCalculator {
     private static final FxPrice STALE_PRICE = new FxPriceImpl(Double.NaN, Double.NaN, true, null, null);
 
     private double[] prices = new double[Market.ALL_MARKETS.length];
-    private RunningMedianCalculator calculator = new RunningMedianCalculator(MAX_MARKETS);
+    private StreamingMedianCalculator calculator = new StreamingMedianCalculator(MAX_MARKETS);
 
     @Override
     public FxPrice calculate() {

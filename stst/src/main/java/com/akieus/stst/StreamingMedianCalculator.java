@@ -4,15 +4,20 @@ import com.akieus.stst.collections.MaxHeap;
 import com.akieus.stst.collections.MinHeap;
 
 /**
- * @author aks
- * @since 01/11/15
+ * Keeps the data divided in two binary heaps (a max-heap and a min-heap) such
+ * all values in the max-heap are <= median while all values in min-heap are >= median.
+ * This allows median to be calculated quickly, but each update requires maintaining
+ * the heaps.
+ *
+ * An alternate implementation that might be acceptable for small heaps is to
+ * collect all values in an array, and sort the array on each getMedian() call.
  */
-public class RunningMedianCalculator {
+public class StreamingMedianCalculator {
 
     private final MaxHeap maxHeap;
     private final MinHeap minHeap;
 
-    public RunningMedianCalculator(int window) {
+    public StreamingMedianCalculator(int window) {
         this.maxHeap = new MaxHeap(window / 2 + 1);
         this.minHeap = new MinHeap(window / 2 + 1);
     }
