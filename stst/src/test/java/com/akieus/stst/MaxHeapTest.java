@@ -1,10 +1,9 @@
 package com.akieus.stst;
 
 import com.akieus.stst.collections.AbstractHeap;
-import com.akieus.stst.collections.BinaryMaxHeap;
+import com.akieus.stst.collections.MaxHeap;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -24,7 +23,6 @@ public class MaxHeapTest {
         for (int i = 0; i < n; i++) {
             values[i] = random.nextDouble();
             maxHeap.add(values[i]);
-            assertThat(maxHeap.isMaxHeap(), is(true));
         }
     }
 
@@ -38,7 +36,6 @@ public class MaxHeapTest {
         for (int i = 0; i < n; i++) {
             values[i] = (int) (random.nextDouble() * 100);
             maxHeap.add(values[i]);
-            assertThat(maxHeap.isMaxHeap(), is(true));
         }
 
         int[] randomIndices = randomIndices(n);
@@ -46,7 +43,6 @@ public class MaxHeapTest {
             double valueToRemove = values[randomIndices[i]];
             int removedIdx = maxHeap.remove(valueToRemove);
             assertThat(removedIdx, is(not(0)));
-            assertThat(maxHeap.isMaxHeap(), is(true));
         }
     }
 
@@ -69,8 +65,8 @@ public class MaxHeapTest {
         }
     }
 
-    private BinaryMaxHeap newHeap() {
-        return new BinaryMaxHeap(16);
+    private MaxHeap newHeap() {
+        return new MaxHeap(16);
     }
 
 }

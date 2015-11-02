@@ -1,7 +1,7 @@
 package com.akieus.stst;
 
-import com.akieus.stst.collections.BinaryMaxHeap;
-import com.akieus.stst.collections.BinaryMinHeap;
+import com.akieus.stst.collections.MaxHeap;
+import com.akieus.stst.collections.MinHeap;
 
 /**
  * @author aks
@@ -9,12 +9,12 @@ import com.akieus.stst.collections.BinaryMinHeap;
  */
 public class RunningMedianCalculator {
 
-    private final BinaryMaxHeap maxHeap;
-    private final BinaryMinHeap minHeap;
+    private final MaxHeap maxHeap;
+    private final MinHeap minHeap;
 
     public RunningMedianCalculator(int window) {
-        this.maxHeap = new BinaryMaxHeap(window / 2 + 1);
-        this.minHeap = new BinaryMinHeap(window / 2 + 1);
+        this.maxHeap = new MaxHeap(window / 2 + 1);
+        this.minHeap = new MinHeap(window / 2 + 1);
     }
 
     public void reset() {
@@ -24,27 +24,36 @@ public class RunningMedianCalculator {
 
     public void add(double value) {
         if (maxHeap.isEmpty() && minHeap.isEmpty()) {
-            maxHeap.add(value);
-            return;
+            addFirstElement(value);
         } else if (maxHeap.size() + minHeap.size() == 1) {
-            double current = maxHeap.isEmpty() ? minHeap.removeRoot() : maxHeap.removeRoot();
-            if (value > current) {
-                maxHeap.add(current);
-                minHeap.add(value);
-            } else {
-                maxHeap.add(value);
-                minHeap.add(current);
-            }
-            return;
+            addSecondElement(value);
+        } else {
+            addToAppropriateHeap(value);
+            rebalance();
         }
+    }
 
+    private void addFirstElement(final double value) {
+        maxHeap.add(value);
+    }
+
+    private void addSecondElement(final double value) {
+        double current = maxHeap.isEmpty() ? minHeap.removeRoot() : maxHeap.removeRoot();
+        if (value > current) {
+            maxHeap.add(current);
+            minHeap.add(value);
+        } else {
+            maxHeap.add(value);
+            minHeap.add(current);
+        }
+    }
+
+    private void addToAppropriateHeap(final double value) {
         if (value < maxHeap.root()) {
             maxHeap.add(value);
         } else {
             minHeap.add(value);
         }
-
-        rebalance();
     }
 
     private void rebalance() {
@@ -88,12 +97,5 @@ public class RunningMedianCalculator {
         } else {
             return minHeap.root();
         }
-    }
-
-    public void printHeaps() {
-        System.out.print("MaxHeap: ");
-        maxHeap.printHeap();
-        System.out.print("MinHeap: ");
-        minHeap.printHeap();
     }
 }

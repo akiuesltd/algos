@@ -1,7 +1,7 @@
 package com.akieus.stst;
 
 public enum PriceProvider {
-    NULL_PROVIDER,
+    NULL_PROVIDER, // not provided in API, but cleaner to have a NULL_PROVIDER than null-handling.
     PROVIDER1,
     PROVIDER2,
     PROVIDER3,

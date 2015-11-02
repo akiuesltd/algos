@@ -3,11 +3,6 @@ package com.akieus.stst;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * A Market is a combintation of {@link PriceSource} and {@link PriceProvider}. PriceProvider may be null.
- * <p>
- * Each market has a unique Id that is used to quickly find the market in an array of markets.
- */
 public class Market {
     public static final Market[] ALL_MARKETS;
 
