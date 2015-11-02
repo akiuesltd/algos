@@ -1,4 +1,7 @@
-package com.akieus.stst.collections;
+package com.akieus.stst;
+
+import com.akieus.stst.collections.BinaryMaxHeap;
+import com.akieus.stst.collections.BinaryMinHeap;
 
 /**
  * @author aks
@@ -6,14 +9,12 @@ package com.akieus.stst.collections;
  */
 public class RunningMedianCalculator {
 
-    private final int window;
     private final BinaryMaxHeap maxHeap;
     private final BinaryMinHeap minHeap;
 
     public RunningMedianCalculator(int window) {
-        this.window = window;
-        this.maxHeap = new BinaryMaxHeap(window / 2);
-        this.minHeap = new BinaryMinHeap(window / 2);
+        this.maxHeap = new BinaryMaxHeap(window / 2 + 1);
+        this.minHeap = new BinaryMinHeap(window / 2 + 1);
     }
 
     public void reset() {
@@ -87,5 +88,12 @@ public class RunningMedianCalculator {
         } else {
             return minHeap.root();
         }
+    }
+
+    public void printHeaps() {
+        System.out.print("MaxHeap: ");
+        maxHeap.printHeap();
+        System.out.print("MinHeap: ");
+        minHeap.printHeap();
     }
 }

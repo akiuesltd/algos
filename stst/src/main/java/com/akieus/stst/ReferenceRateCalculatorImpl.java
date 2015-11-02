@@ -1,7 +1,5 @@
 package com.akieus.stst;
 
-import com.akieus.stst.collections.RunningMedianCalculator;
-
 import static com.akieus.stst.Market.calculateMarketId;
 
 public class ReferenceRateCalculatorImpl implements ReferenceRateCalculator {
@@ -18,7 +16,6 @@ public class ReferenceRateCalculatorImpl implements ReferenceRateCalculator {
         if (Double.isNaN(median)) {
             return STALE_PRICE;
         }
-
         return new FxPriceImpl(median);
     }
 
@@ -30,21 +27,16 @@ public class ReferenceRateCalculatorImpl implements ReferenceRateCalculator {
         double newPrice = fxPrice.isStale() ? Double.NaN : midPrice(fxPrice);
 
         prices[marketId] = newPrice;
-
-        // TODO rewrite
-        if (Double.isNaN(oldPrice)) {
-            if (!Double.isNaN(newPrice)) {
-                calculator.add(newPrice);
-            }
-        } else {
-            if (Double.isNaN(newPrice)) {
+        if (fxPrice.isStale()) {
+            if (isValidPrice(oldPrice)) {
                 calculator.remove(oldPrice);
-            } else {
-                calculator.replace(oldPrice, newPrice);
             }
+        } else if (isValidPrice(oldPrice) && oldPrice != newPrice) {
+            calculator.replace(oldPrice, newPrice);
+        } else {
+            calculator.add(newPrice);
         }
     }
-
 
     @Override
     public void onConfiguration(final Configuration configuration) {
@@ -56,6 +48,11 @@ public class ReferenceRateCalculatorImpl implements ReferenceRateCalculator {
             prices[i] = Double.NaN;
         }
         calculator.reset();
+    }
+
+
+    private boolean isValidPrice(final double value) {
+        return !Double.isNaN(value);
     }
 
     private double midPrice(final FxPrice fxPrice) {
