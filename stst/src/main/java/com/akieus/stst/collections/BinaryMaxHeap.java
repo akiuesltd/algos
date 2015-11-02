@@ -42,6 +42,13 @@ public class BinaryMaxHeap {
         System.out.println(Arrays.toString(heap.heap));
     }
 
+    public void reset() {
+        for (int i = 0; i < heap.length; i++) {
+            heap[i] = 0;
+        }
+        size = 0;
+    }
+
     public int size() {
         return size;
     }

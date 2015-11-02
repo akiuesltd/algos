@@ -6,11 +6,19 @@ package com.akieus.stst.collections;
  */
 public class RunningMedianCalculator {
 
-    private BinaryMaxHeap maxHeap = new BinaryMaxHeap(8);
-    private BinaryMinHeap minHeap = new BinaryMinHeap(8);
+    private final int window;
+    private final BinaryMaxHeap maxHeap;
+    private final BinaryMinHeap minHeap;
 
-    public RunningMedianCalculator() {
+    public RunningMedianCalculator(int window) {
+        this.window = window;
+        this.maxHeap = new BinaryMaxHeap(window / 2);
+        this.minHeap = new BinaryMinHeap(window / 2);
+    }
 
+    public void reset() {
+        maxHeap.reset();
+        minHeap.reset();
     }
 
     public void add(double value) {
@@ -70,7 +78,9 @@ public class RunningMedianCalculator {
     }
 
     public double getMedian() {
-        if (maxHeap.size() == minHeap.size()) {
+        if (maxHeap.isEmpty() && minHeap.isEmpty()) {
+            return Double.NaN;
+        } else if (maxHeap.size() == minHeap.size()) {
             return (maxHeap.root() + minHeap.root()) / 2;
         } else if (maxHeap.size() > minHeap.size()) {
             return maxHeap.root();

@@ -1,69 +1,64 @@
 package com.akieus.stst;
 
-import org.apache.commons.math3.stat.descriptive.rank.Percentile;
-
-import java.util.Arrays;
+import com.akieus.stst.collections.RunningMedianCalculator;
 
 import static com.akieus.stst.Market.calculateMarketId;
 
 public class ReferenceRateCalculatorImpl implements ReferenceRateCalculator {
 
+    private static final int MAX_MARKETS = 16;
     private static final FxPrice STALE_PRICE = new FxPriceImpl(Double.NaN, Double.NaN, true, null, null);
 
-    private final Percentile percentile = new Percentile();
-
-    private double[] allMidPrices = new double[Market.ALL_MARKETS.length];
-    private int[] configuredMarkets = {};
-    private double[] validMidPrices = {};
+    private double[] prices = new double[Market.ALL_MARKETS.length];
+    private RunningMedianCalculator calculator = new RunningMedianCalculator(MAX_MARKETS);
 
     @Override
     public FxPrice calculate() {
-        int count = collectValidPrices();
-        if (count == 0) {
+        double median = calculator.getMedian();
+        if (Double.isNaN(median)) {
             return STALE_PRICE;
         }
 
-        double median = MedianCalculator.calculateMedian(validMidPrices, count);
         return new FxPriceImpl(median);
     }
 
     @Override
     public void onFxPrice(final FxPrice fxPrice) {
         int marketId = calculateMarketId(fxPrice.getSource(), fxPrice.getProvider());
-        allMidPrices[marketId] = fxPrice.isStale() ? Double.NaN : midPrice(fxPrice);
+
+        double oldPrice = prices[marketId];
+        double newPrice = fxPrice.isStale() ? Double.NaN : midPrice(fxPrice);
+
+        prices[marketId] = newPrice;
+
+        // TODO rewrite
+        if (Double.isNaN(oldPrice)) {
+            if (!Double.isNaN(newPrice)) {
+                calculator.add(newPrice);
+            }
+        } else {
+            if (Double.isNaN(newPrice)) {
+                calculator.remove(oldPrice);
+            } else {
+                calculator.replace(oldPrice, newPrice);
+            }
+        }
     }
+
 
     @Override
     public void onConfiguration(final Configuration configuration) {
-        for (int i = 0; i < allMidPrices.length; i++) {
-            allMidPrices[i] = Double.NaN;
+        if (configuration.getSize() > MAX_MARKETS) {
+            throw new IllegalArgumentException("Cannot configured more than " + MAX_MARKETS + " markets");
         }
 
-        validMidPrices = new double[configuration.getSize()];
-        configuredMarkets = new int[configuration.getSize()];
-        for (int i = 0; i < configuration.getSize(); i++) {
-            configuredMarkets[i] = calculateMarketId(configuration.getSource(i), configuration.getProvider(i));
-            validMidPrices[i] = Double.NaN;
+        for (int i = 0; i < prices.length; i++) {
+            prices[i] = Double.NaN;
         }
+        calculator.reset();
     }
 
     private double midPrice(final FxPrice fxPrice) {
         return (fxPrice.getBid() + fxPrice.getOffer()) / 2;
-    }
-
-    /**
-     * Copies all valid mid-prices to validMidPrices array, and returns the count.
-     * Only values up to the index of 'count' are valid, rest are garbage that's
-     * not been cleaned up.
-     */
-    private int collectValidPrices() {
-        int count = 0;
-        for (int configuredMarket : configuredMarkets) {
-            double midPrice = allMidPrices[configuredMarket];
-            if (!Double.isNaN(midPrice)) {
-                validMidPrices[count++] = midPrice;
-            }
-        }
-        return count;
     }
 }

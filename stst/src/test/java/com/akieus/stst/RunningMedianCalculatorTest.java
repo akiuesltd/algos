@@ -81,7 +81,7 @@ public class RunningMedianCalculatorTest {
     }
 
     private RunningMedianCalculator aRunningCalculator() {
-        return new RunningMedianCalculator();
+        return new RunningMedianCalculator(8);
     }
 
 }
