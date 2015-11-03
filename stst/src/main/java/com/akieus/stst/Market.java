@@ -4,10 +4,14 @@ package com.akieus.stst;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Market {
+
     public static final Market[] ALL_MARKETS;
 
+    // should be smallest number such that 2^MULTIPLIER >= number of sources
+    private static final int MULTIPLIER = 5;
+
     static {
-        int totalMarkets = PriceSource.values().length * PriceProvider.values().length;
+        int totalMarkets = PriceProvider.values().length << MULTIPLIER | PriceSource.values().length;
         ALL_MARKETS = new Market[totalMarkets];
         for (PriceSource source : PriceSource.values()) {
             for (PriceProvider provider : PriceProvider.values()) {
@@ -31,7 +35,7 @@ public class Market {
     public static int calculateMarketId(final PriceSource source, final PriceProvider provider) {
         assert source != null;
         assert provider != null;
-        return source.ordinal() + provider.ordinal() * PriceSource.values().length;
+        return provider.ordinal() << MULTIPLIER | source.ordinal();
     }
 
     public PriceSource getSource() {
