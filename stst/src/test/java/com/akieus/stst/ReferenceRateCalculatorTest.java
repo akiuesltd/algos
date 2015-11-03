@@ -101,6 +101,18 @@ public class ReferenceRateCalculatorTest {
     }
 
     @Test
+    public void medianCalculatedCorrectlyIfDuplicatePricePoints() {
+        ReferenceRateCalculator calculator = newCalculator();
+        calculator.onConfiguration(aSimpleConfiguration());
+        calculator.onFxPrice(new FxPriceImpl(1.1, 1.2, PriceSource.SOURCE1, PriceProvider.PROVIDER1));
+        calculator.onFxPrice(new FxPriceImpl(1.1, 1.2, PriceSource.SOURCE1, PriceProvider.PROVIDER1));
+        calculator.onFxPrice(new FxPriceImpl(1.1, 1.2, PriceSource.SOURCE1, PriceProvider.PROVIDER1));
+        calculator.onFxPrice(new FxPriceImpl(1.3, 1.4, PriceSource.SOURCE1, PriceProvider.PROVIDER2));
+
+        assertThat(calculator.calculate().getBid(), is(closeTo(1.15, 0.01)));
+    }
+
+    @Test
     public void resettingConfigurationResetsPrices() {
         ReferenceRateCalculator calculator = newCalculator();
         calculator.onConfiguration(aSimpleConfiguration());

@@ -2,6 +2,10 @@ package com.akieus.stst;
 
 import static com.akieus.stst.Market.calculateMarketId;
 
+/**
+ * Calculates mid-price on each update and feeds it to the StreamingMedianCalculator, which
+ * 'almost' maintains the median, making calculate() call quick.
+ */
 public class ReferenceRateCalculatorImpl implements ReferenceRateCalculator {
 
     private static final int MAX_MARKETS = 16;

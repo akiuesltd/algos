@@ -1,7 +1,5 @@
 package com.akieus.stst.collections;
 
-import java.util.Arrays;
-
 public abstract class AbstractHeap {
 
     protected double[] heap = null;
@@ -65,7 +63,6 @@ public abstract class AbstractHeap {
         }
     }
 
-    // can be improved to log(n), but for a max size of 8, constant might be higher (to be validated)
     public int indexOf(double value) {
         for (int i = 1; i <= size; i++) {
             if (heap[i] == value) {
