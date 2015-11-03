@@ -100,12 +100,11 @@ public class ReferenceRateCalculatorSoakTest {
     }
 
     private double nonZeroRandomDouble() {
-        return ++x;
-//        while (true) {
-//            double random = ThreadLocalRandom.current().nextDouble();
-//            if (random != 0.0) {
-//                return (int) (random * 10);
-//            }
-//        }
+        while (true) {
+            double random = ThreadLocalRandom.current().nextDouble();
+            if (random != 0.0) {
+                return random;
+            }
+        }
     }
 }
