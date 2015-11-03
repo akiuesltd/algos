@@ -8,9 +8,11 @@ import com.akieus.stst.collections.MinHeap;
  * all values in the max-heap are <= median while all values in min-heap are >= median.
  * This allows median to be calculated quickly, but each update requires maintaining
  * the heaps.
- *
+ * <p>
  * An alternate implementation that might be acceptable for small heaps is to
  * collect all values in an array, and sort the array on each getMedian() call.
+ * It will be simpler, but unlikely to be faster than the current implementation
+ * (not proven, of course).
  */
 public class StreamingMedianCalculator {
 
