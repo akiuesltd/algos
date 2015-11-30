@@ -15,12 +15,12 @@ public class ReferenceRateCalculatorImpl implements ReferenceRateCalculator {
     private StreamingMedianCalculator calculator = new StreamingMedianCalculator(MAX_MARKETS);
 
     @Override
-    public FxPrice calculate() {
+    public double calculate() {
         double median = calculator.getMedian();
         if (Double.isNaN(median)) {
-            return STALE_PRICE;
+            return Double.NaN;
         }
-        return new FxPriceImpl(median);
+        return median;
     }
 
     @Override

@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 
 public class RateCalculatorBenchmark {
 
-    private static final int EXECUTIONS = 1000 * 1000;
+    private static final int EXECUTIONS = 1000;
 
     private static final Market TEST_MARKET_1 = new Market(PriceSource.SOURCE1, PriceProvider.PROVIDER1);
     private static final Market TEST_MARKET_2 = new Market(PriceSource.SOURCE1, PriceProvider.PROVIDER2);
@@ -64,17 +64,9 @@ public class RateCalculatorBenchmark {
     };
 
     private static TestFxPrice[] PRICES = {};
-    private static double[] BIDS = {};
-    private static double[] OFFERS = {};
-    private static int[] MARKETS = {};
-    private static boolean[] STALES = {};
 
     static {
         prepPrices();
-        prepBids();
-        prepOffers();
-        prepMarkets();
-        prepStaleFlags();
     }
 
     private static void prepPrices() {
@@ -84,37 +76,9 @@ public class RateCalculatorBenchmark {
             PRICES[i].bid = nonZeroRandomDouble();
             PRICES[i].offer = nonZeroRandomDouble();
             PRICES[i].stale = ThreadLocalRandom.current().nextBoolean();
-            Market market = CONFIGURED_MARKETS[MARKETS[ThreadLocalRandom.current().nextInt(CONFIGURED_MARKETS.length)]];
+            Market market = CONFIGURED_MARKETS[ThreadLocalRandom.current().nextInt(CONFIGURED_MARKETS.length)];
             PRICES[i].provider = market.getProvider();
             PRICES[i].source = market.getSource();
-        }
-    }
-
-    private static void prepBids() {
-        BIDS = new double[EXECUTIONS];
-        for (int i = 0; i < EXECUTIONS; i++) {
-            BIDS[i] = nonZeroRandomDouble();
-        }
-    }
-
-    private static void prepOffers() {
-        OFFERS = new double[EXECUTIONS];
-        for (int i = 0; i < EXECUTIONS; i++) {
-            OFFERS[i] = nonZeroRandomDouble();
-        }
-    }
-
-    private static void prepMarkets() {
-        MARKETS = new int[EXECUTIONS];
-        for (int i = 0; i < EXECUTIONS; i++) {
-            MARKETS[i] = ThreadLocalRandom.current().nextInt(15);
-        }
-    }
-
-    private static void prepStaleFlags() {
-        STALES = new boolean[EXECUTIONS];
-        for (int i = 0; i < EXECUTIONS; i++) {
-            STALES[i] = ThreadLocalRandom.current().nextBoolean();
         }
     }
 
@@ -141,29 +105,17 @@ public class RateCalculatorBenchmark {
     @BenchmarkMode(Mode.SampleTime)
     @OutputTimeUnit(TimeUnit.NANOSECONDS)
     public void singleExecution(ThreadState threadState) {
-        populatePriceData(threadState.fxPrice, threadState.counter);
-        threadState.calculator.onFxPrice(threadState.fxPrice);
+        threadState.calculator.onFxPrice(PRICES[threadState.counter]);
         threadState.calculator.calculate();
-        if (threadState.counter == 999999) {
+        threadState.counter++;
+        if (threadState.counter == EXECUTIONS) {
             threadState.counter = 0;
-        } else {
-            threadState.counter++;
         }
-    }
-
-    private void populatePriceData(TestFxPrice fxPrice, int counter) {
-        fxPrice.bid = BIDS[counter];
-        fxPrice.offer = OFFERS[counter];
-        fxPrice.stale = STALES[counter];
-        Market market = CONFIGURED_MARKETS[MARKETS[counter]];
-        fxPrice.provider = market.getProvider();
-        fxPrice.source = market.getSource();
     }
 
     @State(Scope.Thread)
     public static class ThreadState {
         private ReferenceRateCalculator calculator = null;
-        private TestFxPrice fxPrice = new TestFxPrice();
         private int counter;
 
         @Setup

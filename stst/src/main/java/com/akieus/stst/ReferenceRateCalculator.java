@@ -5,5 +5,5 @@ public interface ReferenceRateCalculator {
 
     void onFxPrice(FxPrice fxPrice);
 
-    FxPrice calculate();
+    double calculate();
 }
