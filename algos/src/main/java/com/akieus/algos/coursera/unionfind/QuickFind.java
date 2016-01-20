@@ -1,6 +1,6 @@
 package com.akieus.algos.coursera.unionfind;
 
-import static com.akieus.utils.Utils.printArray;
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  *
@@ -13,7 +13,7 @@ public class QuickFind {
         qf.connect(8, 3);
         qf.connect(3, 4);
         qf.connect(9, 4);
-        printArray(qf.id);
+        System.out.println(ArrayUtils.toString(qf.id));
         System.out.println(qf.isConnected(3, 9));
         System.out.println(qf.isConnected(3, 7));
     }
