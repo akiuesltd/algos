@@ -12,7 +12,7 @@ public class TimesTableTest {
     private static final int MAX = 12;
 
     public static void main(String... args) {
-        args = new String[] {"10", "7", "8", "9"};
+        args = new String[]{"10", "7", "8", "9"};
 
         if (args.length < 2) {
             System.out.println("Usage: java " + TimesTableTest.class.getCanonicalName() + " <Questions-Per-Number> <Number1> <Number2>");
