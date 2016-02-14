@@ -1,4 +1,4 @@
-package com.akieus.kids.maths;
+package com.akieus.kids;
 
 import com.google.common.collect.Lists;
 
