@@ -58,7 +58,7 @@ public class TcpClientServerITest {
             }
         });
         client.start();
-        Assert.assertTrue(clientConnected.await(100000, MILLISECONDS));
+        Assert.assertTrue(clientConnected.await(100, MILLISECONDS));
 
         ByteBuffer buffer = bufferProvider.get();
         clientSession.get().write(buffer.putLong(1L));

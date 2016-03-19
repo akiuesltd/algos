@@ -53,7 +53,7 @@ public class TcpServer extends AbstractSpeaker<ConnectionListener> implements Se
     }
 
     private void startListening() {
-        LOG.warn("Server {} started listening on {}", name, hostAndPort);
+        LOG.warn("Server {} starting to listen on {}", name, hostAndPort);
         ServerSocketChannel ssc;
         try {
             ssc = ServerSocketChannel.open();
@@ -62,7 +62,7 @@ public class TcpServer extends AbstractSpeaker<ConnectionListener> implements Se
                 ssc.setOption(StandardSocketOptions.SO_RCVBUF, connectionOptions.getReceiveBufferSize());
             }
         } catch (IOException e) {
-            if (!stop) LOG.error("Could not start server {} on hostPort={}", name, hostAndPort);
+            if (!stop) LOG.error("Could not start server {} on hostPort={}", name, hostAndPort, e);
             return;
         }
         while (!stop) {

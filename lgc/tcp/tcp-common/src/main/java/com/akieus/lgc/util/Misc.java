@@ -14,6 +14,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Misc {
     private static final Logger LOG = getLogger(Misc.class);
 
+    public static final short LONG_SIZE = Long.SIZE / 8;
+    public static final short SHORT_SIZE = Short.SIZE / 8;
+
     public static void sleepSafely(final long duration, final TimeUnit unit) {
         try {
             Thread.sleep(unit.toMillis(duration));

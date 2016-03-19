@@ -10,8 +10,8 @@ import java.net.ServerSocket;
  */
 public class TestUtils {
     public static int findFreePort() {
-        try {
-            return new ServerSocket(0).getLocalPort();
+        try (ServerSocket serverSocket = new ServerSocket(0)) {
+            return serverSocket.getLocalPort();
         } catch (IOException e) {
             LangUtil.rethrowUnchecked(e);
         }
