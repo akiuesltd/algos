@@ -5,6 +5,7 @@
         <groupId>com.akieus.lgc.tcp</groupId>
         <artifactId>tcp-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>tcp-common</artifactId>
