@@ -8,7 +8,9 @@ import com.akieus.lgc.util.Misc;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.net.NetworkInterface;
 import java.nio.ByteBuffer;
+import java.util.Enumeration;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -32,7 +34,7 @@ public class UdpSendReceive {
 
         String address = "239.255.0.0";
         int port = IOUtils.findFreePort();
-        UdpSource server = new UdpSource(TEST_SERVER, address, port, "xxx", serverListener, bufferProvider);
+        UdpSource server = new UdpSource(TEST_SERVER, address, port, "lo", serverListener, bufferProvider);
         server.start();
         Misc.sleepSafely(100, MILLISECONDS);
 
@@ -40,7 +42,7 @@ public class UdpSendReceive {
         CountDownLatch clientConnected = new CountDownLatch(1);
         CountDownLatch clientReceivedMsg = new CountDownLatch(1);
         MessageListener clientListener = (byteBuffer) -> clientReceivedMsg.countDown();
-        UdpSource client = new UdpSource(TEST_CLIENT, address, port, "xxx", clientListener, bufferProvider);
+        UdpSource client = new UdpSource(TEST_CLIENT, address, port, "lo", clientListener, bufferProvider);
         client.addListener(new ConnectionListener() {
             @Override
             public void connected(UdpSession session) {
@@ -61,7 +63,11 @@ public class UdpSendReceive {
 
         ByteBuffer buffer = bufferProvider.get();
         clientSession.get().write(buffer.putLong(1L));
-        serverReceivedMsg.await(100, MILLISECONDS);
+        if (serverReceivedMsg.await(100, MILLISECONDS)) {
+            LOG.info("Received message...");
+        } else {
+            throw new RuntimeException("Server didn't receive a msg");
+        }
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {

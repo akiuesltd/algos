@@ -1,12 +1,13 @@
-package com.akieus.lgc.udp;
+package com.akieus.lgc.tcp;
 
-import com.akieus.lgc.io.ByteBufferProvider;
-import com.akieus.lgc.io.DefaultByteBufferProvider;
 import com.akieus.lgc.io.MessageListener;
 import com.akieus.lgc.util.IOUtils;
+import com.akieus.lgc.io.ByteBufferProvider;
+import com.akieus.lgc.io.ConnectionOptions;
+import com.akieus.lgc.io.DefaultByteBufferProvider;
 import com.akieus.lgc.util.Misc;
+import com.google.common.net.HostAndPort;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 
@@ -21,41 +22,39 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * Created by aks on 19/03/2016.
  */
-public class UdpSendReceiveITest {
-    private static final Logger LOG = getLogger(UdpSendReceive.class);
+public class TcpClientServerITest {
+    private static final Logger LOG = getLogger(TcpClientServerITest.class);
 
     private static final String TEST_SERVER = "TEST_SERVER";
     private static final String TEST_CLIENT = "TEST_CLIENT";
 
     @Test
-    @Ignore
     public void testSendReceive() throws InterruptedException, IOException {
         ByteBufferProvider bufferProvider = new DefaultByteBufferProvider(1024, false);
         CountDownLatch serverReceivedMsg = new CountDownLatch(1);
         MessageListener serverListener = (byteBuffer) -> serverReceivedMsg.countDown();
 
 
-        String address = "239.255.0.0";
-        int port = IOUtils.findFreePort();
-        UdpSource server = new UdpSource(TEST_SERVER, address, port, "xxx", serverListener, bufferProvider);
+        HostAndPort hostAndPort = HostAndPort.fromParts("localhost", IOUtils.findFreePort());
+        TcpServer server = new TcpServer(TEST_SERVER, hostAndPort, ConnectionOptions.defaults(), serverListener, bufferProvider);
         server.start();
         Misc.sleepSafely(100, MILLISECONDS);
 
-        final AtomicReference<UdpSession> clientSession = new AtomicReference<>();
+        final AtomicReference<TcpSession> clientSession = new AtomicReference<>();
         CountDownLatch clientConnected = new CountDownLatch(1);
         CountDownLatch clientReceivedMsg = new CountDownLatch(1);
         MessageListener clientListener = (byteBuffer) -> clientReceivedMsg.countDown();
-        UdpSource client = new UdpSource(TEST_CLIENT, address, port, "xxx", clientListener, bufferProvider);
+        TcpClient client = new TcpClient(TEST_CLIENT, hostAndPort, ConnectionOptions.defaults(), clientListener, bufferProvider);
         client.addListener(new ConnectionListener() {
             @Override
-            public void connected(UdpSession session) {
+            public void connected(TcpSession session) {
                 LOG.info("Client connected, session={}", session);
                 clientSession.set(session);
                 clientConnected.countDown();
             }
 
             @Override
-            public void disconnected(UdpSession session) {
+            public void disconnected(TcpSession session) {
 
             }
         });
@@ -65,9 +64,5 @@ public class UdpSendReceiveITest {
         ByteBuffer buffer = bufferProvider.get();
         clientSession.get().write(buffer.putLong(1L));
         serverReceivedMsg.await(100, MILLISECONDS);
-    }
-
-    public static void main(String[] args) throws IOException, InterruptedException {
-        new UdpSendReceive().testSendReceive();
     }
 }

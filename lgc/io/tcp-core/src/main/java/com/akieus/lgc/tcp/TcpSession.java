@@ -1,4 +1,4 @@
-package com.akieus.lgc.udp;
+package com.akieus.lgc.tcp;
 
 import com.akieus.lgc.io.ByteBufferProvider;
 import com.akieus.lgc.io.InconsistentBufferState;
@@ -8,21 +8,21 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
-import java.nio.channels.DatagramChannel;
+import java.nio.channels.SocketChannel;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Created by aks on 19/03/2016.
  */
-public class UdpSession {
-    private static final Logger LOG = getLogger(UdpSession.class);
+public class TcpSession {
+    private static final Logger LOG = getLogger(TcpSession.class);
 
-    private final DatagramChannel channel;
+    private final SocketChannel channel;
     private final ByteBuffer byteBuffer;
     private final MessageListener messageListener;
 
-    public UdpSession(DatagramChannel channel, ByteBufferProvider byteBufferProvider, MessageListener messageListener) {
+    public TcpSession(SocketChannel channel, ByteBufferProvider byteBufferProvider, MessageListener messageListener) {
         this.channel = channel;
         this.messageListener = messageListener;
         this.byteBuffer = byteBufferProvider.get();
